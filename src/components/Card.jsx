@@ -1,10 +1,11 @@
-
 import { useState } from "react";
 
 export default function Card() {
   const [todoTitle, setTodoTitle] = useState("");
-  const [checked, setChecked] = useState([]);
-  const [todos, setTodos] = useState(["we", "are", "dolasha", "lashadome"]);
+  const [checked, setChecked] = useState(
+    JSON.parse(localStorage.getItem("checked"))
+  );
+  const [todos, setTodos] = useState(JSON.parse(localStorage.getItem("todos")));
   console.log(todoTitle);
 
   function deleteTodo(todo) {
@@ -12,11 +13,15 @@ export default function Card() {
       return todo.toLowerCase() !== item.toLowerCase();
     });
     setTodos(filtered);
+    localStorage.setItem("todos", JSON.stringify(filtered));
   }
 
-
   function addTodo(e) {
-    e.preventDefault()
+    e.preventDefault();
+    const isValid = isValidTodo();
+    if (!isValid) {
+      return alert("todo is not valid");
+    }
     let todosCopy = [...todos];
     if (todosCopy.includes(todoTitle)) {
       todosCopy = todosCopy.filter((item) => {
@@ -25,9 +30,10 @@ export default function Card() {
     } else {
       todosCopy = [...todos, todoTitle];
     }
-    setTodos(todosCopy) 
-    setTodoTitle("")  ;
-    
+    setTodos(todosCopy);
+
+    setTodoTitle("");
+    localStorage.setItem("todos", JSON.stringify(todosCopy));
   }
   function selectTodo(todo) {
     let checkedCopy = [...checked];
@@ -39,6 +45,7 @@ export default function Card() {
       checkedCopy = [...checked, todo];
     }
     setChecked(checkedCopy);
+    localStorage.setItem("checked", JSON.stringify(checkedCopy));
   }
 
   function isChecked(todo) {
@@ -52,6 +59,8 @@ export default function Card() {
   console.log(checked);
   function isValidTodo() {
     if (!todoTitle) {
+      return false;
+    } else if (todos.includes(todoTitle)) {
       return false;
     } else {
       return true;
