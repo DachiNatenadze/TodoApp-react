@@ -2,7 +2,38 @@ import { useState } from "react";
 
 export default function Card() {
   const [todoTitle, setTodoTitle] = useState("");
+  const [checked, setChecked] = useState([]);
+  const [todos, setTodos] = useState(["we", "are","dolasha", "lashadome",]);
   console.log(todoTitle);
+
+  function deleteTodo(todo) {
+    const filtered = [...todos].filter((item) => {
+      return todo.toLowerCase() !== item.toLowerCase();
+    });
+    setTodos(filtered);
+  }
+
+  function selectTodo(todo) {
+    let checkedCopy = [...checked];
+    if (checkedCopy.includes(todo)) {
+      checkedCopy = checkedCopy.filter((item) => {
+        return todo !== item;
+      });
+    } else {
+      checkedCopy = [...checked, todo];
+    }
+    setChecked(checkedCopy);
+  }
+
+  function isChecked(todo){
+    if(checked.includes(todo)){
+      return true
+    }else{
+        return false
+    }
+  }
+
+  console.log(checked);
   function isValidTodo() {
     if (!todoTitle) {
       return false;
@@ -10,8 +41,9 @@ export default function Card() {
       return true;
     }
   }
+
   return (
-    <main className="bg h-screen">
+    <main className="bg h-screen relative">
       <div className="container flex flex-col">
         <div className="HeaderInput flex flex-row justify-between items-start w-screen  h-[300px]  pt-[60px] px-[30px]">
           <svg
@@ -72,6 +104,53 @@ export default function Card() {
             value={todoTitle}
           />
         </form>
+      </div>
+      <div className="Todo bg-white rounded-[5px] border w-[327px] absolute left-1/2 translate-x-[-50%] flex flex-col items-center top-[210px]">
+        {todos.map((todo, idx) => {
+          return (
+            <div
+              className="w-full flex px-5 items-center justify-between py-2.5 border-b cursor-pointer"
+              key={idx}
+              onClick={() => selectTodo(todo)}>
+              <div className="checkbox flex flex-row gap-3">
+                <div className="w-[20px] h-[20px] rounded-full bg-transparent border ">
+                  <div
+                    className={`flex justify-center items-center w-full  h-full bg-gradient-to-tr from-[#55DDFF] to-[#C058F3] rounded-full   transition-all duration-300 ease-linear ${
+                      isChecked(todo) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="white"
+                      className="h-3 w-3">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <span>{todo}</span>
+              </div>
+              <div className="div" onClick={() => deleteTodo(todo)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M11.7851 0.471404L11.3137 0L5.89256 5.42115L0.471404 0L0 0.471404L5.42115 5.89256L0 11.3137L0.471404 11.7851L5.89256 6.36396L11.3137 11.7851L11.7851 11.3137L6.36396 5.89256L11.7851 0.471404Z"
+                    fill="#494C6B"
+                  />
+                </svg>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </main>
   );
