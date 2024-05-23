@@ -1,9 +1,10 @@
+
 import { useState } from "react";
 
 export default function Card() {
   const [todoTitle, setTodoTitle] = useState("");
   const [checked, setChecked] = useState([]);
-  const [todos, setTodos] = useState(["we", "are","dolasha", "lashadome",]);
+  const [todos, setTodos] = useState(["we", "are", "dolasha", "lashadome"]);
   console.log(todoTitle);
 
   function deleteTodo(todo) {
@@ -13,6 +14,21 @@ export default function Card() {
     setTodos(filtered);
   }
 
+
+  function addTodo(e) {
+    e.preventDefault()
+    let todosCopy = [...todos];
+    if (todosCopy.includes(todoTitle)) {
+      todosCopy = todosCopy.filter((item) => {
+        return todoTitle !== item;
+      });
+    } else {
+      todosCopy = [...todos, todoTitle];
+    }
+    setTodos(todosCopy) 
+    setTodoTitle("")  ;
+    
+  }
   function selectTodo(todo) {
     let checkedCopy = [...checked];
     if (checkedCopy.includes(todo)) {
@@ -25,11 +41,11 @@ export default function Card() {
     setChecked(checkedCopy);
   }
 
-  function isChecked(todo){
-    if(checked.includes(todo)){
-      return true
-    }else{
-        return false
+  function isChecked(todo) {
+    if (checked.includes(todo)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -73,7 +89,9 @@ export default function Card() {
             />
           </svg>
         </div>
-        <form className="Input flex bg-white items-center absolute gap-4 py-[14px] px-[20px] rounded-[5px] [box-shadow:0px_35px_50px_-15px_rgba(194,_195,_214,_0.50)] top-[140px] left-1/2 translate-x-[-50%] w-[327px]">
+        <form
+          className="Input flex bg-white items-center absolute gap-4 py-[14px] px-[20px] rounded-[5px] [box-shadow:0px_35px_50px_-15px_rgba(194,_195,_214,_0.50)] top-[140px] left-1/2 translate-x-[-50%] w-[327px]"
+          onSubmit={addTodo}>
           <div className="w-[20px] h-[20px] rounded-full bg-transparent border ">
             <div
               className={`flex justify-center items-center w-full  h-full bg-gradient-to-tr from-[#55DDFF] to-[#C058F3] rounded-full ${
@@ -116,7 +134,9 @@ export default function Card() {
                 <div className="w-[20px] h-[20px] rounded-full bg-transparent border ">
                   <div
                     className={`flex justify-center items-center w-full  h-full bg-gradient-to-tr from-[#55DDFF] to-[#C058F3] rounded-full   transition-all duration-300 ease-linear ${
-                      isChecked(todo) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                      isChecked(todo)
+                        ? "opacity-100 pointer-events-auto"
+                        : "opacity-0 pointer-events-none"
                     }`}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
